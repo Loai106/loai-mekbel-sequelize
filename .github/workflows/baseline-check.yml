@@ -2,6 +2,9 @@ name: Baseline Check
 
 # Triggered on pull requests for each push (commit).
 on:
+  push:
+    branches:
+      - main 
   pull_request:
     branches:
       - main  # Adjust to your main branch if it's named differently.
