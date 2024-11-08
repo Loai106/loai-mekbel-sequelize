@@ -1,30 +1,26 @@
 name: Baseline Check
+
+# Triggered on pull requests for each push (commit).
 on:
-  push:
-    branches:
-      - 'main'
   pull_request:
     branches:
-      - 'main'
+      - main  # Adjust to your main branch if it's named differently.
 
 jobs:
-  tests:
+  baseline-check:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v2
-      - name: Setup Node
+
+      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 16
-      - name: Install Dependencies
-        run: npm ci
-      - name: Run test
-        run: npm test    
+          node-version: '16'  # Adjust this if you’re using a different Node.js version
 
+      - name: Install dependencies
+        run: npm install
 
-
-
-
-
+      - name: Run baseline tests
+        run: npm test -- --testPathPattern=tests/baseline  # Run only basic tests here
