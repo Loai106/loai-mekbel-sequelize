@@ -21,10 +21,13 @@ jobs:
         uses: actions/setup-node@v3  # Updated to v3 for the latest version.
         with:
           node-version: "20"  
-          cache: npm
+          cache: "npm"
 
       - name: Install dependencies
         run: npm install
+      
+      - run : ci
 
       - name: Run baseline tests
-        run: npm test 
+        run : test
+      
