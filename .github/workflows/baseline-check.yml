@@ -26,8 +26,6 @@ jobs:
       - name: Install dependencies
         run: npm install
       
-      - run : ci
-
       - name: Run baseline tests
         run : test
       
