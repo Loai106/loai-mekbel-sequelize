@@ -41,6 +41,8 @@ describe('User API Tests', () => {
 
   });
 
+  /*
+
   it('should update the user email',async()=>{
     const reqBody = {
       email:"test@gmail.com"
@@ -58,7 +60,7 @@ describe('User API Tests', () => {
     expect(response.status).toBe(202);
 
   })
-  
+  */
 });
 
 

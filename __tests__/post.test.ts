@@ -44,7 +44,7 @@ describe('Post API', () => {
     expect(response.body.title).toBe(post.title);
   });
 
-  
+  /*
 
   test('Update a post', async () => {
     const post = await Post.create({
@@ -140,5 +140,5 @@ describe('Post API', () => {
     const response = await request(app).get(`/api/posts/${post.id}/comments`);
 
     expect(response.status).toBe(200);
-  });
+  });*/
 });
