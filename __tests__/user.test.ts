@@ -41,7 +41,7 @@ describe('User API Tests', () => {
 
   });
 
-  /*
+  
 
   it('should update the user email',async()=>{
     const reqBody = {
@@ -60,7 +60,7 @@ describe('User API Tests', () => {
     expect(response.status).toBe(202);
 
   })
-  */
+  
 });
 
 

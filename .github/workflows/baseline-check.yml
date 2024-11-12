@@ -1,31 +1,41 @@
 name: Baseline Check
 
-# Triggered on pull requests for each push (commit).
 on:
   push:
     branches:
       - main 
   pull_request:
     branches:
-      - main  # Adjust to your main branch if it's named differently.
+      - main
 
 jobs:
   baseline-check:
     runs-on: ubuntu-latest
-    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: M2823548r$!
+          MYSQL_DATABASE: blogging-system
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --host 127.0.0.1 --user=root --password=root" --health-timeout=5s --health-retries=3 --health-start-period=10s
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Updated to v3 for the latest version.
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3  # Updated to v3 for the latest version.
+        uses: actions/setup-node@v3
         with:
-          node-version: "20"  
-          cache: "npm"
+          node-version: "20"
 
       - name: Install dependencies
         run: npm install
-      
+
+      - name: Wait for MySQL to be ready
+        run: |
+          docker exec -it $MYSQL_CONTAINER_NAME sh -c 'until mysqladmin ping --silent; do echo "Waiting for MySQL..."; sleep 2; done;'
+
       - name: Run baseline tests
-        run : test
-      
+        run: npm test 
