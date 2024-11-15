@@ -1,13 +1,45 @@
-import {Table,Column,Model,DataType,CreatedAt,UpdatedAt,BeforeCreate,HasMany, PrimaryKey, BeforeUpdate} from "sequelize-typescript"
+import {Table,Column,Model,CreatedAt,UpdatedAt,DataType,BeforeCreate,HasMany, PrimaryKey, BeforeUpdate} from "sequelize-typescript"
 import Post from './Post';
 import Comment from "./Comment";
 import bcrypt from "bcrypt";
+import { DataTypes } from "sequelize";
+import sequelize from "../connections";
+
+export const salt = 10;
+
+/*
+const User = sequelize.define("user",{
+
+    id:{
+        type: DataTypes.INTEGER,
+        autoIncrement:true,
+        primaryKey:true
+    },
+    username:{
+        type: DataTypes.STRING,
+        unique:true,
+        allowNull:false,
+    },
+    email:{
+        type: DataTypes.STRING,
+        unique:true,
+        allowNull:false
+    },
+    password:{
+        type:DataTypes.STRING,
+        allowNull:false
+    }
+})
+
+
+*/
 
 
 @Table({
     timestamps:true,
     tableName:"users",
-    modelName:"User"
+    modelName:"User",
+    
 })
 class User extends Model{
     @PrimaryKey
@@ -27,6 +59,7 @@ class User extends Model{
     @Column({
         type: DataType.STRING,
         allowNull :false,
+        unique:true
 
     })
     declare email : string;
@@ -46,7 +79,7 @@ class User extends Model{
     declare updatedAt: Date;  
 
 
-    @HasMany(()=> Post)
+   @HasMany(()=> Post)
     declare posts : Post[];
 
     @HasMany(()=> Comment)
@@ -56,7 +89,6 @@ class User extends Model{
     @BeforeUpdate
     static async hashPassword(user: User){
         if(user.password){
-            const salt = 10;
             user.password = await bcrypt.hash(user.password,salt);
             console.log(`userpassword: ${user.password}`)
         }

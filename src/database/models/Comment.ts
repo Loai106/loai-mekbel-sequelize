@@ -1,6 +1,7 @@
 import {Table,Column,Model,DataType,CreatedAt,UpdatedAt,BeforeCreate,HasMany, PrimaryKey, ForeignKey, BelongsTo} from "sequelize-typescript"
 import User from "./User";
 import Post from "./Post";
+import sequelize from "../connections";
 
 @Table({
     timestamps:true,

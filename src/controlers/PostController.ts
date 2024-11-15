@@ -5,14 +5,32 @@ import User from "../database/models/User";
 import Comment from "../database/models/Comment";
 import Category from "../database/models/Category";
 import Category_Post from "../database/models/Category_Post";
+import { CustomRequest } from "../utils/verfiyToken";
+import { JwtPayload } from "jsonwebtoken";
 
 
 
-export const createPost = async(req:Request,res:Response,next:NextFunction)=>{
-
+export const createPost = async(req: Request ,res:Response,next:NextFunction)=>{
 
     try{
+        console.log('creating post...........')
+
+        //extracting the token from the request 
+     //   const token = req.token as JwtPayload; 
+        
+        //make sure we have the token and it is valid
+      /*  if(!token || typeof token ===  'string'){
+            throw new Error('Token is invalid');
+        }
+*/
         const validatedData : PostSchema = postSchema.parse(req.body);
+
+       /* //check if the auther is the same person logged in
+        if(validatedData.autherId != token.id){
+            throw new Error('not the authorized user');
+        }*/
+
+        //create the post
         const newPost =await Post.create({
             autherId: validatedData.autherId,
             title: validatedData.title,
@@ -103,18 +121,21 @@ export const getPostById = async(req:Request,res:Response,next:NextFunction)=>{
 }
 
 
-export const updatePost = async(req:Request,res:Response,next:NextFunction)=>{
-    const postId= req.params.postId;
-    //check if the post is exist
-    const post = await Post.findByPk(postId);
-    if(!post){
-        throw new Error("No post with this id");
-    }
+export const updatePost = async(req: CustomRequest,res:Response,next:NextFunction)=>{
+  
     try{
-       
+        
 
+        const postId= req.params.postId;
+        //check if the post is exist
+        const post = await Post.findByPk(postId);
+        if(!post){
+            throw new Error("No post with this id");
+        }
         //getting the edited attribute
         const validatedData : PostSchema = postSchema.parse(req.body);
+        
+        //update 
 
         if(validatedData.autherId){
             post.autherId = validatedData.autherId;
@@ -142,15 +163,24 @@ export const updatePost = async(req:Request,res:Response,next:NextFunction)=>{
 
 //deleting post by id 
 
-export const deletePost = async(req:Request,res:Response,next:NextFunction)=>{
+export const deletePost = async(req:CustomRequest,res:Response,next:NextFunction)=>{
 
-    const postId = req.params.postId;
-    //check if post is exist 
-    const post = await Post.findByPk(postId);
-    if(!post){
-        throw new Error('no post exist to delete');
-    }
+    
     try{
+        const postId = req.params.postId;
+        //check if post is exist 
+        const post = await Post.findByPk(postId);
+        if(!post){
+            throw new Error('no post exist to delete');
+        }
+        //extract the token from the req
+        const token = req.token as JwtPayload;
+
+        //make sure the token is valid
+        if(!token || typeof token ==='string'){
+            throw new Error("invalid token");
+        }
+
         await Post.destroy({
             where:{
                 id:postId,

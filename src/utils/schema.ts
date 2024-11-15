@@ -11,7 +11,7 @@ export type UserSchema = z.infer<typeof userSchema>
 
 
 export const postSchema = z.object({
-    autherId: z.number().optional(),
+    autherId: z.number(),
     title: z.string().min(2).optional(),
     summary: z.string().optional(),
     content: z.string().min(6).optional()

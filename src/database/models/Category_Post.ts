@@ -1,6 +1,7 @@
 import {Table,Column,Model,DataType,CreatedAt,UpdatedAt,BeforeCreate,HasMany, PrimaryKey, ForeignKey, BelongsTo} from "sequelize-typescript"
 import Post from "./Post";
 import Category from "./Category";
+import sequelize from "../connections";
 
 @Table({
     timestamps:true,
@@ -23,7 +24,7 @@ class Category_Post extends Model{
     })
     declare postId : number;
 
-    @ForeignKey(()=>Category)
+   @ForeignKey(()=>Category)
     @Column({
         type: DataType.INTEGER
     })

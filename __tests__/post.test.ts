@@ -1,11 +1,66 @@
-/*import request from 'supertest';
-import app from '../src/app'; // Adjust to your app entry point
+import request from 'supertest';
+import app from '../src/app'; 
 import Post from '../src/database/models/Post';
 import User from '../src/database/models/User';
 import Comment from '../src/database/models/Comment';
 import Category from '../src/database/models/Category';
 import Category_Post from '../src/database/models/Category_Post';
+import { create } from 'domain';
+import { Response } from 'supertest';
+jest.mock("../src/database/models/Post",()=>({
+  create: jest.fn()
+}))
 
+jest.mock("../src/utils/verfiyToken",()=>({
+  verifyToken : async (req:any ,res:any , next:any )=> {
+    req.token = {id:1 , username:"mockedUser"}
+    next();
+  }
+}))
+
+jest.mock('../src/utils/userVerification',()=>({
+  verifyUser: async (req:any ,res:any , next:any )=> {
+    next();
+  }
+}))
+
+describe('Post API test',()=>{
+  beforeEach(() => jest.clearAllMocks());
+
+  it('should creat new post',async ()=>{
+
+    const newPost = {
+      autherId:1,
+      title:"title mock",
+      summary:"summary mock",
+      content:"content mock"
+    };
+
+    (Post.create as jest.Mock).mockResolvedValue({
+      id:1,
+      autherId:1,
+      title:"title mock",
+      summary:"summary mock",
+      content:"content mock"
+    });
+
+    const response = await request(app).post('/api/posts').send(newPost);
+
+    expect(response.status).toBe(201);
+  })
+  
+
+  it("should return status 400 if post not created",async()=>{
+    (Post.create as jest.Mock).mockResolvedValue(null);
+    const newPost ={
+
+    }
+    const response = await request(app).post('/api/posts').send();
+    expect(response.status).toBe(400);
+  })
+
+})
+/*
 describe('Post API', () => {
   
 

@@ -3,9 +3,11 @@ import sequelize from '../src/database/connections';
 import request from 'supertest';
 import User from '../src/database/models/User';
 import app from '../src/app';
+import { NextFunction } from 'express';
+import { createToken } from '../src/utils/createToken';
+import { server } from '../src/index';
 
-
-jest.mock("../src/database/models/User",()=>({
+jest.mock("../src/database/models/User", ()=>({
   HasMany : jest.fn(),
   findByPk :jest.fn(),
   create : jest.fn(),
@@ -13,16 +15,41 @@ jest.mock("../src/database/models/User",()=>({
   save: jest.fn()
 }))
 
+jest.mock("../src/utils/verfiyToken",()=>({
+  verifyToken : async (req:any ,res:any , next:any )=> {
+    req.token = {id:1 , username:"mockedUser"}
+    next();
+  }
+}))
+
+jest.mock('../src/utils/createToken',()=>({
+  createToken : jest.fn(()=>'mocked token')
+}))
+
+
+jest.mock('../src/utils/userVerification',()=>({
+  verifyUser: async (req:any ,res:any , next:any )=> {
+    next();
+  }
+}))
 
 describe('User API Tests', () => {
-  
+  beforeEach(() => jest.clearAllMocks());
 
   it('should create a new user', async () => {
     const newUser = {
-      username: 'testuserrrrrrrrrrrrrrrrr',
+      username: 'mockedUser',
       email: 'test@example.com',
       password: 'testpassword123',
     };
+
+    (User.create as jest.Mock).mockResolvedValue({
+      id: 1,
+      username: newUser.username,
+      email: newUser.email,
+      password: newUser.password,
+    });
+    
 
     const response = await request(app)
       .post('/api/users')
@@ -105,16 +132,8 @@ describe('User API Tests', () => {
 
   })
 
-  /*
 
-  it('should delete the user ',async()=>{
-    
-    const response = await request(app).delete('/api/users/1');
-
-    expect(response.status).toBe(202);
-
-  })
-  */
+ 
 });
 
 

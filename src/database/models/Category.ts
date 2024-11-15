@@ -1,6 +1,7 @@
 import {Table,Column,Model,DataType,CreatedAt,UpdatedAt,BeforeCreate,HasMany, PrimaryKey, ForeignKey, BelongsToMany, Unique} from "sequelize-typescript"
 import Category_Post from "./Category_Post";
 import Post from "./Post";
+import sequelize from "../connections";
 
 
 

@@ -1,7 +1,10 @@
 import { NextFunction, Request , Response } from "express";
 import User from "../database/models/User";
 import { UserSchema, userSchema } from "../utils/schema";
-
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken";
+import { SECRET_KEY } from "../utils/verfiyToken";
+import { createToken } from "../utils/createToken";
 
 export const createUser = async(req : Request,res:Response,next:NextFunction)=>{
     
@@ -13,7 +16,11 @@ export const createUser = async(req : Request,res:Response,next:NextFunction)=>{
           email: validatedData.email,
           password: validatedData.password,
           });
-        res.status(201).json({message:"user created successfully",newUser});
+
+        
+        //create token
+       const token = createToken({ username: newUser.username});
+        res.status(201).json({message:"user created successfully",newUser,token});
     }catch(err){
         next(err);
     }

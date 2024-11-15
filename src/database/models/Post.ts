@@ -3,6 +3,29 @@ import User from "./User";
 import Comment from "./Comment";
 import Category_Post from "./Category_Post";
 import Category from "./Category";
+import { DataTypes } from "sequelize";
+import sequelize from "../connections";
+import { title } from "process";
+/*
+const Post = sequelize.define("post",{
+    id:{
+        type: DataTypes.INTEGER,
+        primaryKey: true
+    },
+    title:{
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    summary:{
+        type: DataTypes.STRING,
+
+    },
+    content:{
+        type: DataTypes.STRING,
+        allowNull:false,
+    },
+})
+*/
 @Table({
     timestamps:true,
     tableName:'posts',
